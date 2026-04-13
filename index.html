@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Atikah ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #060608;
+    --text-color: #e8d0d5;
+    --accent-color: #ff6b8a;
+    --accent-glow: #ffb3c6;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Cormorant Garamond', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .particle {
+    position: absolute;
+    background: radial-gradient(circle, var(--accent-glow) 0%, rgba(255,107,138,0) 70%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp 8s linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+  }
+
+  #container {
+    max-width: 600px;
+    padding: 30px;
+    z-index: 10;
+    position: relative;
+    width: 100%;
+  }
+
+  .scene {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+  }
+
+  .scene.active {
+    display: flex;
+  }
+
+  .text-line {
+    opacity: 0;
+    transform: translateY(15px);
+    font-size: 1.8rem;
+    line-height: 1.6;
+    margin: 10px 0;
+    letter-spacing: 0.5px;
+    transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .text-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .text-empty-space {
+    height: 1.5rem;
+  }
+
+  .heart {
+    font-size: 4rem;
+    color: var(--accent-color);
+    animation: heartbeat 1.5s infinite ease-in-out;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+  }
+
+  .btn {
+    margin-top: 40px;
+    padding: 15px 40px;
+    border-radius: 30px;
+    border: 1px solid var(--accent-glow);
+    background: rgba(255, 107, 138, 0.1);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInBtn 1s forwards;
+    animation-delay: 1s;
+    box-shadow: 0 0 15px rgba(255, 107, 138, 0);
+  }
+
+  .btn:hover {
+    background: rgba(255, 107, 138, 0.3);
+    box-shadow: 0 0 20px rgba(255, 107, 138, 0.5);
+    transform: scale(1.05);
+    border-color: var(--accent-color);
+  }
+
+  @keyframes fadeInBtn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .final-message-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  
+  .final-message-container.visible {
+    display: flex;
+    opacity: 1;
+  }
+
+  .burst {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<div id="container">
+  <!-- Intro Start -->
+  <div id="intro" class="scene active">
+    <div class="heart">❤️</div>
+    <div style="font-size: 2rem; margin-bottom: 2rem;">I have something to tell you...</div>
+    <button class="btn" onclick="startExperience()">Tap to Listen</button>
+  </div>
+
+  <!-- Dynamic text container -->
+  <div id="sceneContainer" class="scene">
+    <div id="textLinesWrapper"></div>
+  </div>
+
+  <!-- Final Interaction -->
+  <div id="finalScene" class="final-message-container">
+    <div class="heart">❤️</div>
+    <div id="finalTextWrapper"></div>
+    <button class="btn" id="claimKeyBtn" onclick="claimKey()">Claim the Key 🗝️</button>
+  </div>
+  
+  <div id="claimedScene" class="final-message-container" style="display:none; opacity:0; transition: opacity 2s ease;">
+    <div class="heart" style="font-size: 6rem; animation: heartbeat 0.8s infinite ease-in-out;">💖</div>
+    <h1 style="font-size: 2.5rem; color: #fff; margin-top: 20px; text-shadow: 0 0 20px #ff6b8a;">Congratulations!</h1>
+    <p style="font-size: 1.5rem; font-style: italic;">You have successfully claimed Faris's heart.<br>Keep it safe forever.</p>
+  </div>
+</div>
+
+<!-- Background Music -->
+<audio id="bgm" loop>
+  <source src="Background music/piano background music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- VoiceOver Element -->
+<audio id="voiceover"></audio>
+
+<script>
+// Particle configuration
+const particleContainer = document.getElementById('particles');
+for (let i = 0; i < 40; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.width = p.style.height = (Math.random() * 5 + 2) + 'px';
+  p.style.animationDuration = (Math.random() * 10 + 5) + 's';
+  p.style.animationDelay = (Math.random() * 5) + 's';
+  particleContainer.appendChild(p);
+}
+
+
+const bgm = document.getElementById('bgm');
+const vo = document.getElementById('voiceover');
+const container = document.getElementById('sceneContainer');
+const textWrapper = document.getElementById('textLinesWrapper');
+
+const BGM_NORMAL_VOL = 0.4;
+const BGM_DUCKED_VOL = 0.1;
+
+// Scenes definition
+const scenes = [
+  {
+    lines: ["Hi Atikah ❤️", "I have a little surprise for you…"],
+    audio: null
+  },
+  {
+    lines: ["This is a key…", "A very special one.", "Go ahead… take it."],
+    audio: null
+  },
+  {
+    lines: ["You’ve received something important…", "The key to Faris’s heart."],
+    audio: null
+  },
+  {
+    lines: [
+      "There’s a door in front of you…", "It reacts to you.", "Try opening it…", "",
+      "Oh…", "It opened so easily.", "", "I guess…", "it was always meant for you."
+    ],
+    audio: null
+  },
+  {
+    lines: [
+      "I still remember the first time I saw you…", "", "A few years ago…", "at that wedding event.", "",
+      "I didn’t say it then…", "but something felt different.", "",
+      "I was sitting just a few tables away from you…", "", "So close…", "yet it felt like you were far out of my reach.", "",
+      "I wanted to talk to you…", "but I was so nervous.", "",
+      "And honestly…", "I’m really glad I found the courage to approach you.", "",
+      "Because that moment…", "changed everything for me.", "",
+      "I didn’t realize it at first…", "but I had already started falling for you."
+    ],
+    audio: "VoiceOver/Scene 5.mp4"
+  },
+  {
+    lines: [
+      "Let me confess something…", "", "I was always hoping we could become closer…", "and spend more time together.", "",
+      "I never told you this before…", "but I dreamed about you…", "more than once…", "even a few years ago.", "",
+      "I was always waiting for the right moment…", "but I was too afraid to let you know", "that I really liked you.", "",
+      "But somehow…", "life still brought me to you."
+    ],
+    audio: "VoiceOver/Scene 5B.mp4"
+  },
+  {
+    lines: [
+      "Then came the night I will never forget…", "Our first time meeting… just the two of us.",
+      "It was late…", "It was raining…", "The air was cold…",
+      "That night… you asked me something deep.", "And for the first time… I was honest with you.",
+      "I told you… the closer I get to you… the more I like you.", "And that… I was willing to wait for you."
+    ],
+    audio: "VoiceOver/Scene 6.mp4"
+  },
+  {
+    lines: [
+      "And then… there was that moment in the cinema.", "We were sitting so close…",
+      "But I wasn’t even focusing on the movie.", "Most of the time… I was just looking at you.",
+      "And then… you leaned your head on my shoulder.", "That small moment… meant everything to me."
+    ],
+    audio: "VoiceOver/Scene 7.mp4"
+  },
+  {
+    lines: [
+      "You made everything feel easy.", "You’re so kind… always putting others before yourself.",
+      "You speak so softly…", "You’re truly one of a kind.", "And somehow… you made my life feel lighter…"
+    ],
+    audio: null
+  },
+  {
+    lines: [
+      "There was a time… I thought I might lose the chance with you.", "And honestly… that scared me.",
+      "Because by then… I already knew…", "I didn’t want anyone else."
+    ],
+    audio: "VoiceOver/Scene 9.mp4"
+  }
+];
+
+let currentSceneIndex = 0;
+
+function fadeAudio(audioEl, targetVol, duration) {
+  return new Promise(resolve => {
+    const steps = 20;
+    const stepTime = duration / steps;
+    const volDiff = targetVol - audioEl.volume;
+    const volStep = volDiff / steps;
+    
+    let currentStep = 0;
+    const fade = setInterval(() => {
+      currentStep++;
+      let newVol = audioEl.volume + volStep;
+      if (newVol < 0) newVol = 0;
+      if (newVol > 1) newVol = 1;
+      audioEl.volume = newVol;
+      
+      if (currentStep >= steps) {
+        clearInterval(fade);
+        audioEl.volume = targetVol;
+        resolve();
+      }
+    }, stepTime);
+  });
+}
+
+async function startExperience() {
+  document.getElementById('intro').classList.remove('active');
+  document.getElementById('sceneContainer').classList.add('active');
+  
+  bgm.volume = 0;
+  bgm.play().catch(e => console.log('Audio play failed:', e));
+  fadeAudio(bgm, BGM_NORMAL_VOL, 2000);
+  
+  playNextScene();
+}
+
+async function playNextScene() {
+  if (currentSceneIndex >= scenes.length) {
+    showFinalScene();
+    return;
+  }
+
+  const sceneData = scenes[currentSceneIndex];
+  textWrapper.innerHTML = '';
+  textWrapper.style.opacity = 1;
+  
+  let voPromise = Promise.resolve();
+  let linesPromise;
+
+  if (sceneData.audio) {
+    fadeAudio(bgm, BGM_DUCKED_VOL, 1000);
+    vo.src = sceneData.audio;
+    voPromise = new Promise(resolve => {
+      vo.onended = () => {
+        fadeAudio(bgm, BGM_NORMAL_VOL, 1500);
+        resolve();
+      };
+      vo.play().catch(e => {
+        console.warn('Voice play missed or failed:', e);
+        resolve();
+      });
+    });
+  }
+
+  linesPromise = new Promise(resolve => {
+    let i = 0;
+    const baseDelay = sceneData.audio ? 2500 : 2800; // slightly faster if there's VO to keep up
+    
+    // Some lines are empty (used for spacing in original code), we handle them gracefully
+    function showLine() {
+      if (i < sceneData.lines.length) {
+        const lineText = sceneData.lines[i];
+        const p = document.createElement('div');
+        
+        if (lineText.trim() === "") {
+            p.className = 'text-empty-space';
+        } else {
+            p.className = 'text-line';
+            p.innerHTML = lineText;
+        }
+        
+        textWrapper.appendChild(p);
+        
+        // Trigger reflow to ensure animation plays
+        void p.offsetWidth;
+        if(lineText.trim() !== "") {
+            p.classList.add('visible');
+        }
+        
+        // Scroll into view gently if screen gets too full
+        if (textWrapper.children.length > 5 && i % 2 === 0) {
+           p.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        }
+
+        i++;
+        setTimeout(showLine, baseDelay);
+      } else {
+        setTimeout(resolve, 1500);
+      }
+    }
+    showLine();
+  });
+
+  // Wait for BOTH text to finish typing AND voiceover (if any) to finish
+  await Promise.all([voPromise, linesPromise]);
+  
+  // Extra pause at end of scene
+  await new Promise(r => setTimeout(r, 1000));
+  
+  // Fade out current text wrapper
+  textWrapper.style.transition = 'opacity 1.5s ease';
+  textWrapper.style.opacity = 0;
+  
+  await new Promise(r => setTimeout(r, 1500));
+  
+  currentSceneIndex++;
+  playNextScene();
+}
+
+async function showFinalScene() {
+  document.getElementById('sceneContainer').style.display = 'none';
+  const finalScene = document.getElementById('finalScene');
+  finalScene.classList.add('visible');
+  
+  const finalLines = [
+    "You never needed a key…",
+    "<br>",
+    "Because my heart was already yours.",
+    "<br>",
+    "From the very beginning.",
+    "<br>",
+    "Through every laugh…",
+    "every small moment…",
+    "every memory…",
+    "<br>",
+    "It was always you.",
+    "<br>",
+    "And it will always be you."
+  ];
+
+  const wrapper = document.getElementById('finalTextWrapper');
+  
+  for (let i = 0; i < finalLines.length; i++) {
+    const line = finalLines[i];
+    const p = document.createElement('div');
+    if (line === "<br>") {
+        p.className = 'text-empty-space';
+    } else {
+        p.className = 'text-line';
+        p.innerHTML = line;
+        p.style.fontSize = "2rem"; // Make final message slightly bigger
+    }
+    wrapper.appendChild(p);
+    
+    if (line !== "<br>") {
+        setTimeout(() => {
+            p.classList.add('visible');
+            p.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        }, 50);
+        await new Promise(r => setTimeout(r, 2200));
+    }
+  }
+}
+
+function claimKey() {
+  const btn = document.getElementById('claimKeyBtn');
+  btn.style.transform = "scale(0.9)";
+  
+  setTimeout(() => {
+      document.getElementById('finalScene').style.opacity = 0;
+      
+      setTimeout(() => {
+          document.getElementById('finalScene').style.display = 'none';
+          const claimed = document.getElementById('claimedScene');
+          claimed.style.display = 'flex';
+          
+          // Trigger reflow
+          void claimed.offsetWidth;
+          claimed.style.opacity = 1;
+          
+          createHeartsBurst();
+          
+          // Elevate BGM for dramatic happy ending
+          fadeAudio(bgm, 0.6, 2000);
+      }, 1500);
+  }, 300);
+}
+
+function createHeartsBurst() {
+  const burstContainer = document.createElement('div');
+  burstContainer.className = 'burst';
+  document.body.appendChild(burstContainer);
+  
+  for (let i = 0; i < 50; i++) {
+      const heart = document.createElement('div');
+      heart.innerHTML = ['❤️', '💖', '✨', '🌹'][Math.floor(Math.random()*4)];
+      heart.style.position = 'absolute';
+      heart.style.left = '50%';
+      heart.style.top = '50%';
+      heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+      heart.style.transform = 'translate(-50%, -50%)';
+      heart.style.pointerEvents = 'none';
+      heart.style.transition = 'all 2s cubic-bezier(0.1, 0.8, 0.3, 1)';
+      burstContainer.appendChild(heart);
+      
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 50 + Math.random() * 200;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity;
+      const rot = Math.random() * 360;
+      
+      setTimeout(() => {
+          heart.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ ty}px)) rotate(${rot}deg) scale(0)`;
+          heart.style.opacity = 0;
+      }, 50);
+  }
+  
+  setTimeout(() => {
+      burstContainer.remove();
+  }, 2500);
+}
+
+</script>
+</body>
+</html>
